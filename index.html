@@ -1,0 +1,95 @@
+<script>
+    window.onload = function () {
+        //出力場所を探す
+        let output = document.getElementById("output");
+        //CSVの指定
+        getCsv('data/data.csv');
+
+        //CSVの取り込み
+        function getCsv(data) {
+            // HTTPでファイルを読み込む
+            let xhr = new XMLHttpRequest();
+            //取得するファイルの設定
+            xhr.open("GET", data, true);
+            //レスポンスの確認
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {//4は完了
+                    if (xhr.status === 200) {//Done or load
+                        //console.log(xhr.responseText);
+                        let responce = xhr.responseText;
+                        csvArr(responce);
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            //リクエストの要求送信
+            xhr.send(null);
+        }
+
+        //CSVを配列に格納 dataArrはレスポンス
+        function csvArr(dataArr) {
+            let arr = [];
+            let list = dataArr.split('\n');
+            //帰ってきているレスポンスを配列に格納する
+            for (let i = 0; i < list.length; i++) {
+                arr[i] = list[i].split(',');
+            }
+            //console.log(arr);
+            htmlWrite(arr);//出力をtableに設定する
+        }
+
+        //出力のタグを設定
+        function htmlWrite(dataList) {
+            let insert = "";
+            dataList.forEach(element => {
+                insert += '<tr>';
+                element.forEach((childElement) => {
+                    insert += `<td>${childElement}</td>`;
+                });
+                insert += '</tr>'
+            });
+
+            //HTMLに出力
+            output.innerHTML = insert;
+        }
+    }
+</script>
+
+<body>
+    <div class="main">
+        <p>サンプル</p>
+        <p>リスト形式で出力します。</p>
+        <table id="output">
+        </table>
+    </div>
+</body>
+<style>
+    body {
+        width: 100%;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    .main {
+        width: 600px;
+        margin: 50px auto;
+    }
+
+    table {
+        width: 100%;
+        text-align: center;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-top: solid 1px #778ca3;
+    }
+
+    table tr:nth-child(2n+1) {
+        background: #e9faf9;
+    }
+
+    table td {
+        padding: 10px;
+        border-bottom: solid 1px #778ca3;
+    }
+</style>
