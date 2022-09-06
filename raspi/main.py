@@ -13,5 +13,5 @@ for i in range(10):
 print(data)
 with open(r'./data/data.csv','a',encoding='utf-8', newline="") as csvfile:
     writer = csv.DictWriter(csvfile, fieldnames = field_name)
-    writer.writeheader()
+    #writer.writeheader()
     writer.writerows(data)
